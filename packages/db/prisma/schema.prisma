@@ -12,72 +12,98 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  MEMBER
+  ADMIN
+}
+
 model User {
   id             String          @id @default(uuid())
-  email          String
+  email          String          @unique
   password       String
   memberships    Membership[]
-  issuesMappings IssuesMapping[]
+  issuesMappings IssueAssignee[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
 }
 
 model Org {
   id          String       @id @default(uuid())
   name        String
-  description String
+  description String?
   memberships Membership[]
-  boards      Boards[]
+  boards      Board[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model Membership {
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-  org    Org    @relation(fields: [orgId], references: [id])
-  orgId  String
+  role      Role     @default(MEMBER)
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  org       Org      @relation(fields: [orgId], references: [id])
+  orgId     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@id([orgId, userId])
 }
 
-model Boards {
-  id       String     @id @default(uuid())
-  title    String
-  orgId    String
-  org      Org        @relation(fields: [orgId], references: [id])
-  issues   Issues[]
-  sections Sections[]
+model Board {
+  id        String    @id @default(uuid())
+  title     String
+  orgId     String
+  org       Org       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  issues    Issue[]
+  sections  Section[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
-model Sections {
-  id      String   @id @default(uuid())
-  title   String
-  board   Boards   @relation(fields: [boardId], references: [id])
-  boardId String
-  issues  Issues[]
+model Section {
+  id        String   @id @default(uuid())
+  title     String
+  order     Float
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  boardId   String
+  issues    Issue[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-model Issues {
+model Issue {
   id             String          @id @default(uuid())
   title          String
   description    String?
+  order          Float
   boardId        String
-  board          Boards          @relation(fields: [boardId], references: [id])
+  board          Board           @relation(fields: [boardId], references: [id], onDelete: Cascade)
   sectionId      String
-  section        Sections        @relation(fields: [sectionId], references: [id])
-  comments       Comments[]
-  issuesMappings IssuesMapping[]
+  section        Section         @relation(fields: [sectionId], references: [id])
+  comments       Comment[]
+  issuesMappings IssueAssignee[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@unique([sectionId, order])
 }
 
-model Comments {
-  id      String @id @default(uuid())
-  message String
-  issueId String
-  issue   Issues @relation(fields: [issueId], references: [id])
+model Comment {
+  id        String   @id @default(uuid())
+  message   String
+  issueId   String
+  issue     Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-model IssuesMapping {
-  userId  String
-  user    User   @relation(fields: [userId], references: [id])
-  issueId String
-  issue   Issues @relation(fields: [issueId], references: [id])
+model IssueAssignee {
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  issueId   String
+  issue     Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@id([userId, issueId])
 }
