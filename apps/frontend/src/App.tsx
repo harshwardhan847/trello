@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import LandingPage from "./pages/LandingPage";
+import Board from "./pages/Board";
 
 export function App() {
   return (
@@ -20,6 +21,7 @@ export function App() {
         <Route path="/" element={<LandingPage />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/board/:boardId" element={<Board />} />
         </Route>
       </Routes>
     </BrowserRouter>
