@@ -2,6 +2,7 @@ import {
     createContext,
     useContext,
     useEffect,
+    useRef,
     useState,
     type ReactNode,
 } from "react";
@@ -57,7 +58,11 @@ export function AuthProvider({
     const [loading, setLoading] =
         useState(true);
 
+    const initialized = useRef(false)
+
     useEffect(() => {
+        if (initialized.current) return;
+        initialized.current = true
         initializeAuth();
     }, []);
 
