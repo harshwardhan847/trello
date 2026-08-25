@@ -15,8 +15,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 // routes
-app.use("api/v1/auth", authRoutes);
-app.use("api/v1/users", userRoutes);
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/users", userRoutes);
 app.get("/health", (req, res) => {
   res.status(200).json({
     message: "Healthy",

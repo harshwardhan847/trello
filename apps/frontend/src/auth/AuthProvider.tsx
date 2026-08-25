@@ -24,6 +24,7 @@ import type {
 } from "schemas";
 
 import type { User } from "./types";
+import { useNavigate } from "react-router-dom";
 
 type AuthContextType = {
     user: User | null;
@@ -76,8 +77,7 @@ export function AuthProvider({
         } catch (error) {
             setAccessToken(null);
             setUser(null);
-            // window.location.href = "/login";
-            // return Promise.reject(error);
+
         } finally {
             setLoading(false);
         }

@@ -9,6 +9,7 @@ import { ProtectedRoute } from "./auth/ProtectedRoute";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
+import LandingPage from "./pages/LandingPage";
 
 export function App() {
   return (
@@ -16,6 +17,7 @@ export function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/" element={<LandingPage />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
