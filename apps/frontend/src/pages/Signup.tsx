@@ -1,11 +1,16 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import {
     signupSchema,
 } from "schemas";
 
 import { useAuth } from "../auth/AuthProvider";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function Signup() {
     const { signup } = useAuth();
@@ -60,38 +65,73 @@ export default function Signup() {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input
-                placeholder="Name"
-                value={name}
-                onChange={(e) =>
-                    setName(e.target.value)
-                }
-            />
+        <Card className="w-full max-w-sm">
+            <CardHeader>
+                <CardTitle>Create an account</CardTitle>
+                <CardDescription>
+                    Enter your details to get started.
+                </CardDescription>
+            </CardHeader>
 
-            <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) =>
-                    setEmail(e.target.value)
-                }
-            />
+            <CardContent>
+                <form
+                    onSubmit={handleSubmit}
+                    className="flex flex-col gap-4"
+                >
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="name">Name</Label>
+                        <Input
+                            id="name"
+                            placeholder="Jane Doe"
+                            value={name}
+                            onChange={(e) =>
+                                setName(e.target.value)
+                            }
+                        />
+                    </div>
 
-            <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) =>
-                    setPassword(e.target.value)
-                }
-            />
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                            id="email"
+                            type="email"
+                            placeholder="you@example.com"
+                            value={email}
+                            onChange={(e) =>
+                                setEmail(e.target.value)
+                            }
+                        />
+                    </div>
 
-            {error && <p>{error}</p>}
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="password">Password</Label>
+                        <Input
+                            id="password"
+                            type="password"
+                            placeholder="••••••••"
+                            value={password}
+                            onChange={(e) =>
+                                setPassword(e.target.value)
+                            }
+                        />
+                    </div>
 
-            <button type="submit">
-                Create account
-            </button>
-        </form>
+                    {error && (
+                        <p className="text-sm text-destructive">{error}</p>
+                    )}
+
+                    <Button type="submit" className="w-full">
+                        Create account
+                    </Button>
+
+                    <p className="text-center text-sm text-muted-foreground">
+                        Already have an account?{" "}
+                        <Link to="/login" className="underline underline-offset-4">
+                            Login
+                        </Link>
+                    </p>
+                </form>
+            </CardContent>
+        </Card>
     );
 }
