@@ -142,9 +142,12 @@ export async function refresh(req: Request, res: Response) {
     const payload = verifyRefreshToken(token);
     const tokenHash = hashToken(token);
 
-    const storedToken = await prisma.refreshToken.findUnique({
-      where: { tokenHash },
-    });
+    const [storedToken, user] = await Promise.all([
+      prisma.refreshToken.findUnique({
+        where: { tokenHash },
+      }),
+      prisma.user.findUnique({ where: { id: payload.sub } }),
+    ]);
 
     if (
       !storedToken ||
@@ -155,31 +158,33 @@ export async function refresh(req: Request, res: Response) {
         message: "Invalid refresh token",
       });
     }
-    const user = await prisma.user.findUnique({ where: { id: payload.sub } });
     if (!user) {
       return res.status(401).json({
         message: "User not found",
       });
     }
 
-    await prisma.refreshToken.update({
-      where: {
-        id: storedToken.id,
-      },
-      data: {
-        revokedAt: new Date(),
-      },
-    });
-
     const newAccessToken = createAccessToken(user);
     const newRefreshToken = createRefreshToken(user.id);
-    await prisma.refreshToken.create({
-      data: {
-        tokenHash: hashToken(newRefreshToken),
-        userId: user.id,
-        expiresAt: new Date(Date.now() + refreshCookieOptions.maxAge),
-      },
-    });
+
+    await Promise.all([
+      prisma.refreshToken.update({
+        where: {
+          id: storedToken.id,
+        },
+        data: {
+          revokedAt: new Date(),
+        },
+      }),
+      prisma.refreshToken.create({
+        data: {
+          tokenHash: hashToken(newRefreshToken),
+          userId: user.id,
+          expiresAt: new Date(Date.now() + refreshCookieOptions.maxAge),
+        },
+      }),
+    ]);
+
     res.cookie(
       REFRESH_TOKEN_COOKIE_NAME,
       newRefreshToken,
