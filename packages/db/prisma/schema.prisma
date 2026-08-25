@@ -19,12 +19,26 @@ enum Role {
 
 model User {
   id             String          @id @default(uuid())
+  name           String
   email          String          @unique
-  password       String
+  passwordHash   String
   memberships    Membership[]
   issuesMappings IssueAssignee[]
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
+  refreshTokens  RefreshToken[]
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model Org {
@@ -43,6 +57,7 @@ model Membership {
   userId    String
   org       Org      @relation(fields: [orgId], references: [id])
   orgId     String
+  accepted  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
