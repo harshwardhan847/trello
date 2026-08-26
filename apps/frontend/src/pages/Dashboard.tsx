@@ -1,22 +1,13 @@
+import NavBar from "@/components/dashboard/NavBar";
 import { useAuth } from "../auth/AuthProvider";
 
 export default function Dashboard() {
-    const {
-        user,
-        logout,
-    } = useAuth();
+
 
     return (
-        <div>
-            <h1>
-                Welcome {user?.name}
-            </h1>
+        <main className="flex relative items-start justify-center w-screen h-full min-h-screen">
+            <NavBar />
 
-            <p>{user?.email}</p>
-
-            <button onClick={logout}>
-                Logout
-            </button>
-        </div>
+        </main>
     );
 }
