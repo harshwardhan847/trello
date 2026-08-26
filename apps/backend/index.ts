@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { authenticate } from "./middleware/auth.middleware";
 import { errorMiddleware } from "./middleware/error.middleware";
+import boardRoutes from "./routes/board.routes";
 const app = express();
 
 app.use(
@@ -21,6 +22,7 @@ app.use(cookieParser());
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/orgs", authenticate, orgRoutes);
+app.use("/api/v1", authenticate, boardRoutes);
 app.get("/health", (req, res) => {
   res.status(200).json({
     message: "Healthy",

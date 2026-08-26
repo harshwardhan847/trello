@@ -1,14 +1,17 @@
 import { Router } from "express";
 import {
+  getBoards,
   createBoard,
   getBoard,
-  getBoards,
 } from "../controllers/board.controller";
 
 const router = Router();
 
-router.get("/boards", getBoards);
-router.get("/boards/:boardId", getBoard);
-router.post("/boards/:boardId", createBoard);
+router.get("/boards/:orgId", getBoards);
+router.post("/board", createBoard);
+router.get("/board/:boardId", getBoard);
+// Todo
+// router.patch("/:boardId",updateBoard)
+// router.delete("/:boardId",deleteBoard)
 
 export default router;

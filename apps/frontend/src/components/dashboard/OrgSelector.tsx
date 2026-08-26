@@ -5,11 +5,13 @@ import type { TOrg } from "db/types"
 import { Plus } from "lucide-react"
 import { Button } from "../ui/button"
 import { CreateOrgDialog } from "./CreateOrgDialog"
+import { useAppState } from "@/provider/AppState"
 
 type Props = {}
 
 const OrgSelector = (props: Props) => {
     const [orgs, setOrgs] = useState<{ org: TOrg }[]>([])
+    const { setOrg } = useAppState()
     useEffect(() => {
         getUserOrgs().then((data) => {
             setOrgs(data)
@@ -29,7 +31,9 @@ const OrgSelector = (props: Props) => {
                     <SelectLabel>Organizations</SelectLabel>
                     {
                         orgs?.map(({ org }) => {
-                            return <SelectItem key={org?.id} value={org.id}>{org.name}</SelectItem>
+                            return <SelectItem key={org?.id} value={org.id} onClick={() => {
+                                setOrg(org)
+                            }}>{org.name}</SelectItem>
                         })
                     }
 

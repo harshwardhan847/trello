@@ -2,7 +2,6 @@ import { prisma } from "db/client";
 import type { Request, Response } from "express";
 import { orgSchema } from "schemas";
 import { catchAsync } from "../utils/catchAsync";
-import type { User } from "../../../packages/db/generated/prisma/client";
 
 export const createOrg = catchAsync(async (req: Request, res: Response) => {
   const result = orgSchema.safeParse(req.body);

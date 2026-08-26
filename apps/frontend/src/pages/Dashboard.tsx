@@ -1,12 +1,19 @@
+import Boards from "@/components/dashboard/Boards";
 import NavBar from "@/components/dashboard/NavBar";
-import { useAuth } from "../auth/AuthProvider";
+import { useAppState } from "@/provider/AppState";
 
 export default function Dashboard() {
+    const { org } = useAppState()
 
 
     return (
-        <main className="flex relative items-start justify-center w-screen h-full min-h-screen">
+        <main className="flex flex-col relative items-center justify-start w-screen h-full min-h-screen">
             <NavBar />
+            selected org:{org?.name}
+
+
+            {/* //TODO: Create an org card if no org and default select first org  */}
+            {org?.id ? <Boards orgId={org?.id} /> : "select an org or create one"}
 
         </main>
     );
