@@ -3,6 +3,7 @@ import type { TBoard } from "db/types"
 import { useEffect, useState } from "react"
 import { CreateBoard } from "./CreateBoard"
 import { Card } from "../ui/card"
+import { Link } from "react-router-dom"
 
 type Props = {
     orgId: string
@@ -34,8 +35,10 @@ const Boards = ({ orgId }: Props) => {
                     </>
                     :
                     <>
-                        {boards.map((board) => {
-                            return <BoardCard data={board} />
+                        {boards?.map((board) => {
+                            return <Link key={board.id} to={`/board/${board.id}`}>
+                                <BoardCard data={board} />
+                            </Link>
                         })}
                         <CreateBoard setBoards={setBoards} />
                     </>
@@ -49,5 +52,5 @@ export default Boards
 
 
 export function BoardCard({ data }: { data: TBoard }) {
-    return <Card className="h-36 flex items-center justify-center">{data.title}</Card>
+    return <Card className="h-36 flex items-center justify-center" >{data.title}</Card>
 }

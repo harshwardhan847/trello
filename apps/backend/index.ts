@@ -2,6 +2,7 @@ import express from "express";
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
 import orgRoutes from "./routes/org.routes";
+import issueRoutes from "./routes/issue.routes";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { authenticate } from "./middleware/auth.middleware";
@@ -23,6 +24,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/orgs", authenticate, orgRoutes);
 app.use("/api/v1", authenticate, boardRoutes);
+app.use("/api/v1/issues", authenticate, issueRoutes);
 app.get("/health", (req, res) => {
   res.status(200).json({
     message: "Healthy",

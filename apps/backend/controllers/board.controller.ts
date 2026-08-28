@@ -18,6 +18,26 @@ export const createBoard = catchAsync(async (req: Request, res: Response) => {
       orgId,
     },
   });
+  // Add default sections
+  const sections = await prisma.section.createMany({
+    data: [
+      {
+        title: "Todo",
+        order: 0,
+        boardId: board.id,
+      },
+      {
+        title: "In Progress",
+        order: 1,
+        boardId: board.id,
+      },
+      {
+        title: "Done",
+        order: 2,
+        boardId: board.id,
+      },
+    ],
+  });
 
   return res.json({
     message: "Board Created Successfully!",
@@ -47,7 +67,21 @@ export const getBoard = catchAsync(async (req: Request, res: Response) => {
     });
   }
   const { boardId } = result.data;
-  const board = await prisma.board.findUnique({ where: { id: boardId } });
+  const board = await prisma.board.findUnique({
+    where: { id: boardId },
+    select: {
+      title: true,
+      org: {
+        select: {
+          name: true,
+          id: true,
+        },
+      },
+      sections: {
+        orderBy: { order: "asc" },
+      },
+    },
+  });
   return res.status(200).json({
     board,
   });

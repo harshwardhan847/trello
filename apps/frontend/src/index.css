@@ -5,8 +5,8 @@
     @apply font-sans;
   }
 
-  body {
-    @apply grid place-items-center min-w-[320px] min-h-screen relative m-0 bg-background text-foreground;
+  body,#root {
+    @apply grid place-items-center min-w-[320px] w-full min-h-screen relative m-0 bg-background text-foreground;
   }
 }
 
