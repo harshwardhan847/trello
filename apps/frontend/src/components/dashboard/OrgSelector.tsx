@@ -11,7 +11,8 @@ type Props = {}
 
 const OrgSelector = (props: Props) => {
     const [orgs, setOrgs] = useState<{ org: TOrg }[]>([])
-    const { setOrg } = useAppState()
+    const { setOrg, getOrg } = useAppState()
+    const org = getOrg();
     useEffect(() => {
         getUserOrgs().then((data) => {
             setOrgs(data)
@@ -22,7 +23,7 @@ const OrgSelector = (props: Props) => {
     console.log(orgs)
 
     return (
-        <Select>
+        <Select defaultValue={org?.id}>
             <SelectTrigger className="w-full max-w-48">
                 <SelectValue placeholder="Select an Organization" />
             </SelectTrigger>
@@ -32,6 +33,7 @@ const OrgSelector = (props: Props) => {
                     {
                         orgs?.map(({ org }) => {
                             return <SelectItem key={org?.id} value={org.id} onClick={() => {
+                                console.log("clicked", org)
                                 setOrg(org)
                             }}>{org.name}</SelectItem>
                         })

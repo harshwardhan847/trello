@@ -29,7 +29,8 @@ export function CreateBoard({
     setBoards: React.Dispatch<React.SetStateAction<TBoard[]>>
 }) {
     const [open, setOpen] = useState(false)
-    const { org } = useAppState()
+    const { getOrg } = useAppState()
+    const org = getOrg();
     const form = useForm<CreateBoardInput>({
         resolver: zodResolver(
             boardSchema,

@@ -12,10 +12,10 @@ import React, {
 
 
 type AppStateContextType = {
-    org: TOrg | null
-    setOrg: React.Dispatch<React.SetStateAction<AppStateContextType['org']>>
-    board: TBoard | null
-    setBoard: React.Dispatch<React.SetStateAction<AppStateContextType['board']>>
+    getOrg: () => TOrg | null
+    setOrg: (org: TOrg) => void
+    getBoard: () => TBoard | null
+    setBoard: (board: TBoard) => void
 
 };
 
@@ -29,15 +29,37 @@ export function AppStateProvider({
 }: {
     children: ReactNode;
 }) {
-    const [org, setOrg] = useState<AppStateContextType['org']>(null)
-    const [board, setBoard] = useState<AppStateContextType["board"]>(null)
+    const [org, setOrgLocal] = useState<TOrg | null>(null)
+    const [board, setBoardLocal] = useState<TBoard | null>(null)
+
+    const orgLocalStorage = localStorage.getItem("org") ?? null;
+    const boardLocalStorage = localStorage.getItem("board") ?? null;
+
+    const setBoard = (board: TBoard) => {
+        localStorage.setItem("board", JSON.stringify(board));
+        setBoardLocal(board)
+    }
+    const setOrg = (org: TOrg) => {
+        localStorage.setItem("org", JSON.stringify(org));
+        setOrgLocal(org)
+    }
+    const getOrg = () => {
+        return orgLocalStorage ? JSON.parse(orgLocalStorage) as TOrg : org
+    }
+    const getBoard = () => {
+        return boardLocalStorage ? JSON.parse(boardLocalStorage) as TBoard : board
+    }
+
+
+
+
 
     return (
         <AppStateContext.Provider
             value={{
-                org,
+                getOrg,
                 setOrg,
-                board,
+                getBoard,
                 setBoard
             }}
         >
