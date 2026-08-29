@@ -3,7 +3,6 @@ import { z } from "zod";
 export const issueSchema = z.object({
   title: z.string().min(2, "Name must be at least 2 characters").max(100),
   description: z.string().max(1000).optional(),
-  order: z.float32(),
   boardId: z.string(),
   sectionId: z.string(),
 });

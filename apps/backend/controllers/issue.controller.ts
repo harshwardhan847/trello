@@ -35,8 +35,16 @@ export const createIssue = catchAsync(async (req: Request, res: Response) => {
       errors: result.error.flatten(),
     });
   }
+  let order = 1000;
+  const lastIssueInSection = await prisma.issue.findFirst({
+    where: { sectionId: result.data.sectionId },
+    orderBy: { order: "desc" },
+  });
+  if (lastIssueInSection) {
+    order = lastIssueInSection.order + 1000;
+  }
 
-  const issue = await prisma.issue.create({ data: result.data });
+  const issue = await prisma.issue.create({ data: { ...result.data, order } });
 
   return res.status(200).json({
     issue,
